@@ -1,11 +1,13 @@
 package com.example.crudreview.controller;
 
+import com.example.crudreview.dto.request.UpdateArticleRequest;
 import com.example.crudreview.dto.response.ArticleSummaryResponse;
 import com.example.crudreview.service.ArticleService;
 import com.example.crudreview.dto.request.ArticleRequest;
 import com.example.crudreview.dto.response.ApiResponse;
 import com.example.crudreview.dto.response.ArticleDetailResponse;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Parameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +42,13 @@ public class ArticleController {
         List<ArticleSummaryResponse> articleDetailResponses = articleService.getArticles();
 
         return ResponseEntity.ok(ApiResponse.success(200, "게시글 전체 조회에 성공하였습니다.", articleDetailResponses));
+    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<ArticleDetailResponse>> updateArticle(@PathVariable Long id,
+            @RequestBody UpdateArticleRequest request) {
+        ArticleDetailResponse articleDetailResponse = articleService.updateArticle(id, request.getTitle(), request.getContent(), request.getPassword());
+
+        return ResponseEntity.ok(ApiResponse.success(200, "게시글을 업데이트 하였습니다.", articleDetailResponse));
     }
 
 }
